@@ -1,8 +1,17 @@
+import 'package:dio_crud/api_services/dio_handler.dart';
 import 'package:dio_crud/screens/login_screen.dart';
+import 'package:dio_crud/view_models/auth_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  DioHandler.setup();
+  runApp(
+    MultiProvider(
+      providers: [ChangeNotifierProvider(create: (ctx) => AuthViewModel())],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
