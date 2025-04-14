@@ -9,7 +9,8 @@ class DioHandler {
   DioHandler._internal()
     : dio = Dio(
         BaseOptions(
-          baseUrl: "http://192.168.1.103:5000/api",
+          // baseUrl: "http://192.168.1.103:5000/api",
+          baseUrl: "https://dummyjson.com",
           connectTimeout: const Duration(milliseconds: 5000),
           receiveTimeout: const Duration(milliseconds: 3000),
         ),

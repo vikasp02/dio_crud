@@ -21,29 +21,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Email and password are required")),
+        const SnackBar(content: Text("Email and password are required")),
       );
       return;
     }
 
-    final authVM = Provider.of<AuthViewModel>(context, listen: false);
-
     try {
-      // final loginUser = await authVM.login(
-      final loginUser = await authVM.login(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      final avm = Provider.of<AuthViewModel>(context, listen: false);
+      await avm.login(email: email, password: password);
 
-      // print("Token: ${loginUser.token}");
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
-      );
+      // Verify user exists before navigation
+      log('avm.user == null: ${avm.user == null}');
+      if (avm.user != null) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          (route) => false,
+        );
+      }
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Login failed")));
+      ).showSnackBar(SnackBar(content: Text("Login failed: ${e.toString()}")));
     }
   }
 

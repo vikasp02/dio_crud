@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:dio_crud/models/user.dart';
+import 'package:dio_crud/models/login_model.dart';
 import 'dio_handler.dart';
 
 class ApiService {
-  final Dio _dio = getIt<DioHandler>().dio;
+  Dio _dio = getIt<DioHandler>().dio;
 
   Future<LoginModel?> login({
     required String email,
