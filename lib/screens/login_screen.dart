@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio_crud/screens/home_screen.dart';
 import 'package:dio_crud/view_models/auth_view_model.dart';
 import 'package:flutter/material.dart';
@@ -13,71 +11,78 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  void login() async {
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Email and password are required")),
-      );
-      return;
-    }
-
-    try {
-      final avm = Provider.of<AuthViewModel>(context, listen: false);
-      await avm.login(email: email, password: password);
-
-      // Verify user exists before navigation
-      log('avm.user == null: ${avm.user == null}');
-      if (avm.user != null) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-          (route) => false,
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Login failed: ${e.toString()}")));
-    }
-  }
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: emailController,
-              decoration: InputDecoration(hintText: 'Enter your email'),
+              decoration: const InputDecoration(
+                hintText: 'Enter your email',
+                border: OutlineInputBorder(),
+              ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 16),
             TextField(
               controller: passwordController,
-              decoration: InputDecoration(hintText: 'Enter your password'),
+              obscureText: true,
+              decoration: const InputDecoration(
+                hintText: 'Enter your password',
+                border: OutlineInputBorder(),
+              ),
             ),
-            SizedBox(height: 20),
-            Container(
+            const SizedBox(height: 20),
+            if (authViewModel.errorMessage != null)
+              Text(
+                authViewModel.errorMessage!,
+                style: const TextStyle(color: Colors.red),
+              ),
+            const SizedBox(height: 10),
+            SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {
-                  login();
-                },
-                child: Text('Login'),
+                onPressed:
+                    authViewModel.isLoading
+                        ? null
+                        : () async {
+                          await authViewModel.login(
+                            emailController.text.trim(),
+                            passwordController.text.trim(),
+                          );
+                          if (authViewModel.isLoggedIn) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (ctx) => HomeScreen()),
+                            );
+                          }
+                        },
+                child:
+                    authViewModel.isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Login'),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }

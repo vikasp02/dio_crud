@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'dart:convert';
-
 LoginModel loginModelFromJson(String str) =>
     LoginModel.fromJson(json.decode(str));
 
@@ -56,5 +54,38 @@ class LoginModel {
     "lastName": lastName,
     "gender": gender,
     "image": image,
+  };
+}
+// To parse this JSON data, do
+//
+//     final loginModelContact = loginModelContactFromJson(jsonString);
+
+LoginModelContact loginModelContactFromJson(String str) =>
+    LoginModelContact.fromJson(json.decode(str));
+
+String loginModelContactToJson(LoginModelContact data) =>
+    json.encode(data.toJson());
+
+class LoginModelContact {
+  String? id;
+  String? name;
+  String? email;
+  String? token;
+
+  LoginModelContact({this.id, this.name, this.email, this.token});
+
+  factory LoginModelContact.fromJson(Map<String, dynamic> json) =>
+      LoginModelContact(
+        id: json["_id"],
+        name: json["name"],
+        email: json["email"],
+        token: json["token"],
+      );
+
+  Map<String, dynamic> toJson() => {
+    "_id": id,
+    "name": name,
+    "email": email,
+    "token": token,
   };
 }
