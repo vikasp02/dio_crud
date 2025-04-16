@@ -1,4 +1,4 @@
-import 'package:dio_crud/models/faqs.dart';
+import 'package:dio_crud/models/faqs_model.dart';
 import 'package:flutter/material.dart';
 import 'package:dio_crud/api_services/api_service.dart';
 

@@ -1,8 +1,11 @@
+import 'package:dio_crud/screens/dashboard_screen.dart';
 import 'package:dio_crud/screens/faqs_screen.dart';
 import 'package:dio_crud/screens/login_screen.dart';
 import 'package:dio_crud/view_models/auth_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'education_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -23,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (authViewModel.isLoggedIn) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => FaqsScreen()),
+        MaterialPageRoute(builder: (_) => DashboardScreen()),
       );
     } else {
       Navigator.pushReplacement(
